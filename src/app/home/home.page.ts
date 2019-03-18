@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 @Component({
   selector: 'app-home',
@@ -7,14 +8,14 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
-  public image: any
+  public image: any;
   
   constructor(
-    private camera: Camera
+    private camera: Camera,
+    private webview: WebView
   ) { }
 
   openCamera(){
-    console.log('here!');
     const options: CameraOptions = {
       quality: 10,
       destinationType: this.camera.DestinationType.FILE_URI,
@@ -25,20 +26,13 @@ export class HomePage implements OnInit {
       //Rotate the image to correct for the orientation of the device during capture
       correctOrientation: true 
     }
-     this.camera.getPicture(options).then((imageData) => {
-     // imageData is either a base64 encoded string or a file URI
-     // If it's base64 (DATA_URL):
-
-     this.image = imageData;
-
-     console.log(this.image);
-    //  let base64Image = 'data:image/jpeg;base64,' + imageData;
-    //  console.log(base64Image);
-     
+    this.camera.getPicture(options).then((imageData) => {
+        this.image = this.webview.convertFileSrc(imageData);
     }, (err) => {
      // Handle error
+     console.log(err);
     });
-  }
+  }  
 
   ngOnInit() {
     console.log('welcome');
