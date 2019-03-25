@@ -34,12 +34,29 @@ export class HomePage implements OnInit {
       correctOrientation: true
     }
     this.camera.getPicture(options).then((imageData) => {
+      console.log(imageData);
+      
       this.image = this.webview.convertFileSrc(imageData);
+      this.getFileEntry(imageData)
+      
     }, (err) => {
      // Handle error
      console.log(err);
     }); 
   }
+
+  getFileEntry(imgUri) {
+    this.file.resolveLocalFilesystemUrl(imgUri).then((fileEntry) => {
+      // Do something with the FileEntry object, like write to it, upload it, etc.
+      // writeFile(fileEntry, imgUri);
+      console.log("got file: " + fileEntry.nativeURL);
+      // displayFileData(fileEntry.nativeURL, "Native URL");
+    }, (err) => {
+      console.log(err);
+      
+    });
+}
+  
   createNewFile() {
     console.log('here!'); 
   // https://github.com/ionic-team/ionic-native/issues/657#issuecomment-253084301
